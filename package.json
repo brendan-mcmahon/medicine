@@ -1,0 +1,21 @@
+{
+  "name": "medicine-reminder",
+  "version": "1.0.0",
+  "description": "Medication reminder system using AWS Lambda and Telegram",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.540.0",
+    "@aws-sdk/lib-dynamodb": "^3.540.0",
+    "axios": "^1.6.8",
+    "date-fns": "^3.6.0",
+    "date-fns-tz": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.136",
+    "@types/node": "^20.11.30",
+    "typescript": "^5.4.2"
+  }
+} 
