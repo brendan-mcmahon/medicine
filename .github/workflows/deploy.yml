@@ -1,0 +1,71 @@
+name: Deploy Medicine Reminder
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  NODE_VERSION: '20.x'
+  LAMBDA1_FUNCTION_NAME: 'record_medication'
+  LAMBDA2_FUNCTION_NAME: 'check_medication'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Create Lambda deployment packages
+        run: |
+          cd dist
+          zip -r lambda1.zip lambda1/
+          zip -r lambda2.zip lambda2/
+          cd ..
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update Lambda 1
+        run: |
+          aws lambda update-function-code \
+            --function-name ${{ env.LAMBDA1_FUNCTION_NAME }} \
+            --zip-file fileb://dist/lambda1.zip
+
+      - name: Update Lambda 2
+        run: |
+          aws lambda update-function-code \
+            --function-name ${{ env.LAMBDA2_FUNCTION_NAME }} \
+            --zip-file fileb://dist/lambda2.zip
+
+      - name: Update Lambda Environment Variables
+        run: |
+          aws lambda update-function-configuration \
+            --function-name ${{ env.LAMBDA1_FUNCTION_NAME }} \
+            --environment "Variables={TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}}"
+          aws lambda update-function-configuration \
+            --function-name ${{ env.LAMBDA2_FUNCTION_NAME }} \
+            --environment "Variables={TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" 

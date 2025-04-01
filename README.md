@@ -6,42 +6,55 @@ This system helps track medication intake using AWS Lambda functions and Telegra
 
 - Node.js 20.x or later
 - AWS CLI configured with appropriate credentials
-- Terraform installed
 - A Telegram bot token (obtain from [@BotFather](https://t.me/botfather))
 
-## Setup
+## AWS Setup (Manual)
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+1. Create DynamoDB Table:
+   - Table name: `Medicine`
+   - Partition key: `chatId` (String)
+   - Add fields:
+     - `username` (String)
+     - `lastMedicationTime` (String)
 
-2. Build the TypeScript code:
-   ```bash
-   npm run build
-   ```
+2. Create Lambda Functions:
+   - Function 1:
+     - Name: `record_medication`
+     - Runtime: Node.js 20.x
+     - Handler: `lambda1/index.handler`
+     - Environment variable: `TELEGRAM_BOT_TOKEN`
+     - Create function URL (CORS disabled)
+   
+   - Function 2:
+     - Name: `check_medication`
+     - Runtime: Node.js 20.x
+     - Handler: `lambda2/index.handler`
+     - Environment variable: `TELEGRAM_BOT_TOKEN`
 
-3. Create Lambda deployment packages:
-   ```bash
-   cd dist
-   zip -r lambda1.zip lambda1/
-   zip -r lambda2.zip lambda2/
-   cd ..
-   ```
+3. Create EventBridge Rule:
+   - Schedule: `0/30 * * * ? *` (every 30 minutes)
+   - Target: `check_medication` Lambda function
+   - Note: The Lambda function internally checks if it's after 9 AM Eastern before sending notifications
 
-4. Deploy infrastructure:
-   ```bash
-   cd infrastructure
-   terraform init
-   terraform apply
-   ```
-   When prompted, enter your Telegram bot token.
+4. Set up IAM permissions:
+   - Lambda functions need DynamoDB access
+   - EventBridge needs Lambda invoke permissions
+
+## GitHub Actions Setup
+
+1. Create AWS access keys for deployment
+2. Add repository secrets:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+   - `TELEGRAM_BOT_TOKEN`
+
+3. Push code to trigger deployment
 
 ## Usage
 
 ### Recording Medication Taken
 
-Use the Lambda function URL (output after terraform apply) with a GET request:
+Use the Lambda function URL with a GET request:
 
 ```
 https://<function-url>?chatId=<telegram-chat-id>
@@ -65,5 +78,5 @@ The DynamoDB table "Medicine" has the following schema:
 ## Security Notes
 
 - The Lambda function URL is public and should be protected in a production environment
-- The Telegram bot token is stored as a sensitive variable in Terraform
+- Store sensitive credentials securely
 - Consider adding authentication to the Lambda function URL in production 
