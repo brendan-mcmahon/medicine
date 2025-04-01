@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: us-east-2
   NODE_VERSION: '20.x'
   LAMBDA1_FUNCTION_NAME: 'record_medication'
   LAMBDA2_FUNCTION_NAME: 'check_medication'
