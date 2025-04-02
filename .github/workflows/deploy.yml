@@ -46,9 +46,9 @@ jobs:
           cp src/RecordMedication/index.js dist/RecordMedication/index.js
           cp src/CheckMedication/index.js dist/CheckMedication/index.js
           
-          # Copy package.json and install production dependencies
-          cp package.json dist/RecordMedication/
-          cp package.json dist/CheckMedication/
+          # Copy package files and install production dependencies
+          cp package.json package-lock.json dist/RecordMedication/
+          cp package.json package-lock.json dist/CheckMedication/
           cd dist/RecordMedication && npm ci --omit=dev && cd ../..
           cd dist/CheckMedication && npm ci --omit=dev && cd ../..
           
