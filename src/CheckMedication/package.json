@@ -10,8 +10,8 @@
   "license": "ISC",
   "description": "Medication reminder system using AWS Lambda and Telegram",
   "dependencies": {
-	"aws-sdk": "^2.1692.0",
-	"dotenv": "^16.4.7",
-	"node-telegram-bot-api": "^0.66.0"
+    "aws-sdk": "^2.1692.0",
+    "dotenv": "^16.4.7",
+    "node-telegram-bot-api": "^0.66.0"
   }
 }

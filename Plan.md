@@ -50,7 +50,6 @@ This lambda function will record the time that the user confirms they took their
   * `src/CheckMedication/index.js`: The entry point for the `CheckMedication` lambda function
   * `src/RecordMedication/`: The source code for the `RecordMedication` lambda function
   * `src/RecordMedication/index.js`: The entry point for the `RecordMedication` lambda function
-  * `src/utils.js`: A utility file for the lambda functions
   * `src/package.json`: The package.json file for the lambda functions
   * `src/package-lock.json`: The package-lock.json file for the lambda functions
 * `README.md`: The README file for the project
