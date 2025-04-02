@@ -43,8 +43,8 @@ jobs:
           cp src/utils.js dist/lambda2/
           
           # Copy lambda specific files
-          cp src/lambda1/index.js dist/lambda1/index.js
-          cp src/lambda2/index.js dist/lambda2/index.js
+          cp src/lambda1/index.mjs dist/lambda1/index.mjs
+          cp src/lambda2/index.mjs dist/lambda2/index.mjs
           
           # Copy package.json and install production dependencies
           cp package.json dist/lambda1/
