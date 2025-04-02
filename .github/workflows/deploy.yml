@@ -33,15 +33,28 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Build TypeScript
-        run: npm run build
-
-      - name: Create Lambda deployment packages
+      - name: Prepare Lambda packages
         run: |
-          cd dist
-          zip -r lambda1.zip lambda1/
-          zip -r lambda2.zip lambda2/
-          cd ..
+          # Create directories for each lambda
+          mkdir -p dist/lambda1 dist/lambda2
+          
+          # Copy shared utils
+          cp src/utils.js dist/lambda1/
+          cp src/utils.js dist/lambda2/
+          
+          # Copy lambda specific files
+          cp src/lambda1/index.js dist/lambda1/index.js
+          cp src/lambda2/index.js dist/lambda2/index.js
+          
+          # Copy package.json and install production dependencies
+          cp package.json dist/lambda1/
+          cp package.json dist/lambda2/
+          cd dist/lambda1 && npm ci --omit=dev && cd ../..
+          cd dist/lambda2 && npm ci --omit=dev && cd ../..
+          
+          # Create deployment packages
+          cd dist/lambda1 && zip -r ../lambda1.zip * && cd ../..
+          cd dist/lambda2 && zip -r ../lambda2.zip * && cd ../..
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
