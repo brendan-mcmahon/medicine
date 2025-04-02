@@ -45,13 +45,12 @@ This lambda function will record the time that the user confirms they took their
 * The lambda functions need to be deployed to the `main` branch
 
 # Project Structure
-* `src/`: The source code for the lambda functions
-  * `src/CheckMedication/`: The source code for the `CheckMedication` lambda function
-  * `src/CheckMedication/index.js`: The entry point for the `CheckMedication` lambda function
-  * `src/RecordMedication/`: The source code for the `RecordMedication` lambda function
-  * `src/RecordMedication/index.js`: The entry point for the `RecordMedication` lambda function
-  * `src/package.json`: The package.json file for the lambda functions
-  * `src/package-lock.json`: The package-lock.json file for the lambda functions
+* `CheckMedication/`: The source code for the `CheckMedication` lambda function
+* `CheckMedication/index.js`: The entry point for the `CheckMedication` lambda function
+* `RecordMedication/`: The source code for the `RecordMedication` lambda function
+* `RecordMedication/index.js`: The entry point for the `RecordMedication` lambda function
+* `package.json`: The package.json file for the lambda functions
+* `package-lock.json`: The package-lock.json file for the lambda functions
 * `README.md`: The README file for the project
 * `.github/workflows/deploy-check-medication.yml`: The workflow file for the `CheckMedication` lambda function
 * `.github/workflows/deploy-record-medication.yml`: The workflow file for the `RecordMedication` lambda function
