@@ -1,10 +1,21 @@
-import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
-import { docClient, TABLE_NAME, sendTelegramMessage } from '../utils';
+// Import necessary packages
+const AWS = require('aws-sdk');
+const dotenv = require('dotenv');
+const TelegramBot = require('node-telegram-bot-api');
 
-export const handler = async (event) => {
+// Load environment variables
+dotenv.config();
+
+// Initialize DynamoDB
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
+
+// Initialize Telegram Bot
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
+
+exports.handler = async (event) => {
   try {
-    const chatId = event.queryStringParameters?.chatId;
-    
+    // Get chatId from query string
+    const chatId = event.queryStringParameters.chatId;
     if (!chatId) {
       return {
         statusCode: 400,
@@ -12,40 +23,33 @@ export const handler = async (event) => {
       };
     }
 
+    // Get current timestamp
+    const currentTime = new Date().toISOString();
+
     // Update the lastMedicationTime in DynamoDB
-    const updateCommand = new UpdateCommand({
-      TableName: TABLE_NAME,
+    const params = {
+      TableName: 'Medicine',
       Key: { chatId },
       UpdateExpression: 'SET lastMedicationTime = :time',
       ExpressionAttributeValues: {
-        ':time': new Date().toISOString()
-      },
-      ReturnValues: 'ALL_NEW'
-    });
+        ':time': currentTime
+      }
+    };
 
-    const result = await docClient.send(updateCommand);
-    const updatedRecord = result.Attributes;
+    await dynamoDb.update(params).promise();
 
-    if (!updatedRecord) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ message: 'Chat ID not found' })
-      };
-    }
-
-    // Send Telegram message
-    await sendTelegramMessage(chatId, `${updatedRecord.username} has taken meds!`);
+    // Send confirmation message to the user
+    await bot.sendMessage(chatId, `Medication recorded at ${currentTime}`);
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'Medication time updated successfully' })
+      body: JSON.stringify({ message: 'Medication recorded successfully' })
     };
-
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error recording medication:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ message: 'Internal server error' })
     };
   }
-}; 
+};
