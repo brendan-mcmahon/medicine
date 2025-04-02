@@ -21,14 +21,14 @@ This system helps track medication intake using AWS Lambda functions and Telegra
    - Function 1:
      - Name: `record_medication`
      - Runtime: Node.js 20.x
-     - Handler: `lambda1/index.handler`
+     - Handler: `RecordMedication/index.handler`
      - Environment variable: `TELEGRAM_BOT_TOKEN`
      - Create function URL (CORS disabled)
    
    - Function 2:
      - Name: `check_medication`
      - Runtime: Node.js 20.x
-     - Handler: `lambda2/index.handler`
+     - Handler: `CheckMedication/index.handler`
      - Environment variable: `TELEGRAM_BOT_TOKEN`
 
 3. Create EventBridge Rule:
