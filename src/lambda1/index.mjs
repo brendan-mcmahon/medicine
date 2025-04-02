@@ -1,8 +1,7 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME, sendTelegramMessage } from '../utils';
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (event) => {
   try {
     const chatId = event.queryStringParameters?.chatId;
     

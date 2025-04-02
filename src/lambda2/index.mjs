@@ -1,8 +1,7 @@
 import { ScanCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME, sendTelegramMessage, getEasternTimeNineAM } from '../utils';
-import type { MedicineRecord } from '../utils';
 
-export const handler = async (): Promise<void> => {
+export const handler = async () => {
   try {
     // Scan the DynamoDB table for all records
     const scanCommand = new ScanCommand({
@@ -10,7 +9,7 @@ export const handler = async (): Promise<void> => {
     });
 
     const result = await docClient.send(scanCommand);
-    const records = result.Items as MedicineRecord[];
+    const records = result.Items;
 
     if (!records) {
       console.log('No records found');
