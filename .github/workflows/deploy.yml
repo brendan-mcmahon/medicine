@@ -43,8 +43,8 @@ jobs:
           cp src/utils.js dist/CheckMedication/
           
           # Copy lambda specific files
-          cp src/RecordMedication/index.mjs dist/RecordMedication/index.mjs
-          cp src/CheckMedication/index.mjs dist/CheckMedication/index.mjs
+          cp src/RecordMedication/index.js dist/RecordMedication/index.js
+          cp src/CheckMedication/index.js dist/CheckMedication/index.js
           
           # Copy package.json and install production dependencies
           cp package.json dist/RecordMedication/
