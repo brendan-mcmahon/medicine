@@ -36,4 +36,4 @@ jobs:
 
     - name: Deploy to Lambda
       run: |
-        aws lambda update-function-code --function-name record-medication --zip-file fileb://RecordMedication/function.zip
+        aws lambda update-function-code --function-name record_medication --zip-file fileb://RecordMedication/function.zip

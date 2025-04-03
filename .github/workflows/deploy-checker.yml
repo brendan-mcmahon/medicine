@@ -27,11 +27,13 @@ jobs:
     - name: Install dependencies
       run: |
         cd CheckMedication
-        npm install
+        npm install --production
+
+    - name: Package function
+      run: |
+        cd CheckMedication
+        zip -r function.zip . -x "*.git*" "*.github*"
 
     - name: Deploy to Lambda
       run: |
-        cd CheckMedication
-        zip -r function.zip .
-        aws lambda update-function-code --function-name check-medication --zip-file fileb://function.zip
-
+        aws lambda update-function-code --function-name check_medication --zip-file fileb://CheckMedication/function.zip
