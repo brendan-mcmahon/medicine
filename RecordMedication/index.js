@@ -35,6 +35,8 @@ exports.handler = async (event) => {
 			}
 		};
 
+		console.log("params:", params);
+
 		await dynamoDb.update(params).promise();
 
 		await bot.sendMessage(chatId, `Medication recorded at ${currentTime}`);
