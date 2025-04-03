@@ -26,7 +26,9 @@ exports.handler = async (event) => {
 
 		const params = {
 			TableName: 'Medicine',
-			Key: { chatId },
+			Key: {
+				'chatId': chatId.toString()
+			},
 			UpdateExpression: 'SET lastMedicatedTime = :time',
 			ExpressionAttributeValues: {
 				':time': currentTime
