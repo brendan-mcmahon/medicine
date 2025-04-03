@@ -23,10 +23,15 @@ exports.handler = async (event) => {
 			};
 		}
 
+		console.log("chatId type:", typeof chatId);
+		console.log("chatId value (raw):", chatId);
+
 		const getParams = {
 			TableName: 'Medicine',
 			Key: {
-				'chatId': chatId.toString()
+				'chatId': {
+					S: chatId.toString()
+				}
 			}
 		};
 		
@@ -39,7 +44,9 @@ exports.handler = async (event) => {
 		const params = {
 			TableName: 'Medicine',
 			Key: {
-				'chatId': chatId.toString()
+				'chatId': {
+					S: chatId.toString()
+				}
 			},
 			UpdateExpression: 'SET lastMedicatedTime = :time',
 			ExpressionAttributeValues: {
