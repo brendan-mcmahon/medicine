@@ -12,32 +12,15 @@ const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
 exports.handler = async (event) => {
 	try {
-		console.log("query string params:", event.queryStringParameters);
 		const chatId = event.queryStringParameters?.chatId;
-		console.log("Chat Id:", chatId);
 		if (!chatId) {
-			console.error('chatId is required');
 			return {
 				statusCode: 400,
 				body: JSON.stringify({ message: 'chatId is required' })
 			};
 		}
 
-		console.log("chatId type:", typeof chatId);
-		console.log("chatId value (raw):", chatId);
-
-		const getParams = {
-			TableName: 'Medicine',
-			Key: {
-				chatId
-			  },
-		};
-
-		console.log("Attempting to get item with params:", getParams);
-		const getResult = await dynamoDb.get(getParams).promise();
-		console.log("Current item in DB:", getResult.Item);
-
-		const currentTime = new Date().toISOString();
+		const currentTime = new Date();
 
 		const params = {
 			TableName: 'Medicine',
@@ -46,15 +29,13 @@ exports.handler = async (event) => {
 			},
 			UpdateExpression: 'SET lastMedicationTime = :time',
 			ExpressionAttributeValues: {
-			  ':time': currentTime
+			  ':time': currentTime.toISOString()
 			}
 		  };
 
-		console.log("Update params:", params);
-
 		await dynamoDb.update(params).promise();
 
-		await bot.sendMessage(chatId, `Medication recorded at ${currentTime}`);
+		await bot.sendMessage(chatId, `Medication recorded at ${currentTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`);
 
 		return {
 			statusCode: 200,
