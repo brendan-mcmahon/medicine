@@ -12,12 +12,10 @@ const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
 function isBeforeNineAM(date) {
 	const easternDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-	console.log('Eastern Date Hours:', easternDate.getHours());
 	return easternDate.getHours() < 9;
 }
 
 exports.handler = async () => {
-	console.log('Checking medication...');
 	try {
 		if (isBeforeNineAM(new Date())) {
 			console.log('Not 9am, returning');
@@ -32,15 +30,10 @@ exports.handler = async () => {
 		};
 
 		const data = await dynamoDb.scan(params).promise();
-		console.log('Data:', data);
 
 		for (const item of data.Items) {
 			const lastMedicatedTime = new Date(item.lastMedicatedTime);
-			console.log('Last Medicated Time:', lastMedicatedTime);
-			console.log('Current Date:', new Date());
-			console.log('Last Medicated Time Date:', lastMedicatedTime.toDateString());
-			console.log('Current Date:', new Date().toDateString());
-			if (lastMedicatedTime.toDateString() === new Date().toDateString()) {
+			if (lastMedicatedTime.toDateString() !== new Date().toDateString()) {
 				await bot.sendMessage(item.chatId, 'Reminder: You have not taken your medication today.');
 				console.log('Sent message to:', item.chatId);
 			}
