@@ -9,7 +9,6 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
 exports.handler = async (event) => {
-	console.log("event:", event);
 	try {
 		console.log("query string params:", event.queryStringParameters);
 		const chatId = event.queryStringParameters.chatId;
@@ -21,6 +20,17 @@ exports.handler = async (event) => {
 				body: JSON.stringify({ message: 'chatId is required' })
 			};
 		}
+
+		const getParams = {
+			TableName: 'Medicine',
+			Key: {
+				'chatId': chatId.toString()
+			}
+		};
+		
+		console.log("Attempting to get item with params:", getParams);
+		const getResult = await dynamoDb.get(getParams).promise();
+		console.log("Current item in DB:", getResult.Item);
 
 		const currentTime = new Date().toISOString();
 
@@ -35,7 +45,7 @@ exports.handler = async (event) => {
 			}
 		};
 
-		console.log("params:", params);
+		console.log("Update params:", params);
 
 		await dynamoDb.update(params).promise();
 
@@ -49,7 +59,7 @@ exports.handler = async (event) => {
 		console.error('Error recording medication:', error);
 		return {
 			statusCode: 500,
-			body: JSON.stringify({ message: 'Internal server error' })
+			body: JSON.stringify({ message: 'Internal server error', error: error.message })
 		};
 	}
 };
