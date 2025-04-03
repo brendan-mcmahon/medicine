@@ -28,11 +28,8 @@ jobs:
       run: |
         cd RecordMedication
         npm install --production
-
-    - name: Package function
-      run: |
-        cd RecordMedication
-        zip -r function.zip . -x "*.git*" "*.github*"
+        zip -j ../function.zip index.js node_modules/*
+        aws lambda update-function-code --function-name record-medication --zip-file fileb://../function.zip
 
     - name: Deploy to Lambda
       run: |
