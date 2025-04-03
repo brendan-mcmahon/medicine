@@ -29,12 +29,10 @@ exports.handler = async (event) => {
 		const getParams = {
 			TableName: 'Medicine',
 			Key: {
-				'chatId': {
-					S: chatId.toString()
-				}
-			}
+				chatId
+			  },
 		};
-		
+
 		console.log("Attempting to get item with params:", getParams);
 		const getResult = await dynamoDb.get(getParams).promise();
 		console.log("Current item in DB:", getResult.Item);
@@ -44,15 +42,13 @@ exports.handler = async (event) => {
 		const params = {
 			TableName: 'Medicine',
 			Key: {
-				'chatId': {
-					S: chatId.toString()
-				}
+			  chatId
 			},
-			UpdateExpression: 'SET lastMedicatedTime = :time',
+			UpdateExpression: 'SET lastMedicationTime = :time',
 			ExpressionAttributeValues: {
-				':time': currentTime
+			  ':time': currentTime
 			}
-		};
+		  };
 
 		console.log("Update params:", params);
 
