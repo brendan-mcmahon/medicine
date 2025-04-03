@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'CheckMedication/**'
+      - '.github/workflows/deploy-checker.yml'
     branches:
       - main
 

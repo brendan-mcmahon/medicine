@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'RecordMedication/**'
+      - '.github/workflows/deploy-recorder.yml'
     branches:
       - main
 
