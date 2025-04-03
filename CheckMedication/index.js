@@ -17,16 +17,19 @@ function isBeforeNineAM(timestamp) {
 }
 
 exports.handler = async () => {
+	console.log('Checking medication...');
   try {
     const params = {
       TableName: 'Medicine',
     };
 
     const data = await dynamoDb.scan(params).promise();
+	console.log('Data:', data);
 
     for (const item of data.Items) {
       if (isBeforeNineAM(item.lastMedicatedTime)) {
         await bot.sendMessage(item.chatId, 'Reminder: You have not taken your medication today.');
+		console.log('Sent message to:', item.chatId);
       }
     }
 
