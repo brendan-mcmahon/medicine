@@ -24,19 +24,12 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-2
 
-    - name: Install dependencies
+    - name: Install dependencies and package
       run: |
         cd CheckMedication
-		npm install --production
-		zip -j ../function.zip * node_modules/*
-		aws lambda update-function-code --function-name check-medication --zip-file fileb://../function.zip
-
-
-    - name: Package function
-      run: |
-        cd CheckMedication
-        zip -j function.zip index.js node_modules/*
+        npm install --production
+        zip -j ../function.zip index.js node_modules/*
 
     - name: Deploy to Lambda
       run: |
-        aws lambda update-function-code --function-name check_medication --zip-file fileb://CheckMedication/function.zip
+        aws lambda update-function-code --function-name check-medication --zip-file fileb://function.zip
