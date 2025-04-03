@@ -37,6 +37,9 @@ exports.handler = async () => {
 		for (const item of data.Items) {
 			const lastMedicatedTime = new Date(item.lastMedicatedTime);
 			console.log('Last Medicated Time:', lastMedicatedTime);
+			console.log('Current Date:', new Date());
+			console.log('Last Medicated Time Date:', lastMedicatedTime.toDateString());
+			console.log('Current Date:', new Date().toDateString());
 			if (lastMedicatedTime.toDateString() === new Date().toDateString()) {
 				await bot.sendMessage(item.chatId, 'Reminder: You have not taken your medication today.');
 				console.log('Sent message to:', item.chatId);
