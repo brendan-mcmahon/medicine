@@ -33,4 +33,4 @@ jobs:
 
     - name: Deploy to Lambda
       run: |
-        aws lambda update-function-code --function-name check-medication --zip-file fileb://function.zip
+        aws lambda update-function-code --function-name check_medication --zip-file fileb://function.zip
