@@ -9,8 +9,9 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
 exports.handler = async (event) => {
-	console.log(event);
+	console.log("event:", event);
 	try {
+		console.log("query string params:", event.queryStringParameters);
 		const chatId = event.queryStringParameters.chatId;
 		console.log("Chat Id:", chatId);
 		if (!chatId) {
