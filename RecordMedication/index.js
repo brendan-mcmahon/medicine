@@ -4,14 +4,16 @@ const TelegramBot = require('node-telegram-bot-api');
 
 dotenv.config();
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const dynamoDb = new AWS.DynamoDB.DocumentClient({
+	region: 'us-east-2'
+});
 
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
 exports.handler = async (event) => {
 	try {
 		console.log("query string params:", event.queryStringParameters);
-		const chatId = event.queryStringParameters.chatId;
+		const chatId = event.queryStringParameters?.chatId;
 		console.log("Chat Id:", chatId);
 		if (!chatId) {
 			console.error('chatId is required');
