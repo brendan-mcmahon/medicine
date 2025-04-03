@@ -28,7 +28,7 @@ exports.handler = async () => {
     const data = await dynamoDb.scan(params).promise();
 
     for (const item of data.Items) {
-      if (isBeforeNineAM(item.lastMedicationTime)) {
+      if (isBeforeNineAM(item.lastMedicatedTime)) {
         await bot.sendMessage(item.chatId, 'Reminder: You have not taken your medication today.');
       }
     }

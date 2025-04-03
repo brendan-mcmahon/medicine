@@ -15,7 +15,7 @@ This system helps track medication intake using AWS Lambda functions and Telegra
    - Partition key: `chatId` (String)
    - Add fields:
      - `username` (String)
-     - `lastMedicationTime` (String)
+     - `lastMedicatedTime` (String)
 
 2. Create Lambda Functions:
    - Function 1:
@@ -69,7 +69,7 @@ The system automatically checks at 9 AM Eastern Time if users have taken their m
 The DynamoDB table "Medicine" has the following schema:
 - `chatId` (String) - Primary key, the Telegram chat ID
 - `username` (String) - The user's name for notifications
-- `lastMedicationTime` (String) - ISO timestamp of last medication taken
+- `lastMedicatedTime` (String) - ISO timestamp of last medication taken
 
 ## Environment Variables
 

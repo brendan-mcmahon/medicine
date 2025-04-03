@@ -2,15 +2,15 @@
 ## DynamodB Table Schema (`Medicine`)
 * `chatId`: string (this is an id that refers to the chat id for a telegram bot conversation
 * `name`: string (the user's name)
-* `lastMedicationTime`: string (a timestamp showing when the user last confirmed they took their medication.
+* `lastMedicatedTime`: string (a timestamp showing when the user last confirmed they took their medication.
 
 # Lambda Functions
 ## Check Medication
 ### Description
-This lambda function will scan the `Medicine` table and check if the `lastMedicationTime` is before 9 AM Eastern Time. If it is, the function will send a message to the user via telegram.
+This lambda function will scan the `Medicine` table and check if the `lastMedicatedTime` is before 9 AM Eastern Time. If it is, the function will send a message to the user via telegram.
 ### Steps
 1. Scan the `Medicine` table
-2. Check if the `lastMedicationTime` is before 9 AM Eastern Time
+2. Check if the `lastMedicatedTime` is before 9 AM Eastern Time
 3. If it is, send a message to the user via telegram
 4. If it is not, do nothing
 5. Return a success message
