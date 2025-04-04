@@ -11,8 +11,12 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient({
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
 function isBeforeNineAM(date) {
-	const easternDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-	return easternDate.getHours() < 9;
+	const easternTime = new Date(date.toLocaleString('en-US', { 
+		timeZone: 'America/New_York',
+		hour12: false
+	}));
+	
+	return easternTime.getHours() < 9;
 }
 
 exports.handler = async () => {
