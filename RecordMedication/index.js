@@ -41,7 +41,7 @@ exports.handler = async (event) => {
 
 		await dynamoDb.update(params).promise();
 
-		await bot.sendMessage(chatId, `Medication recorded at ${easternTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/New_York' })}`);
+		await bot.sendMessage(chatId, `Medication recorded at ${easternTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`);
 
 		return { statusCode: 200 };
 	} catch (error) {
