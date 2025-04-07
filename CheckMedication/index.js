@@ -16,6 +16,9 @@ function isBeforeNineAM(date) {
 		hour12: false
 	}));
 
+	console.log('Checking eastern time:', easternTime);
+	console.log('Eastern time hour:', easternTime.getHours());
+
 	return easternTime.getHours() < 9;
 }
 
