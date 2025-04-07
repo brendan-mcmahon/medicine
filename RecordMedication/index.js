@@ -12,25 +12,22 @@ const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
 exports.handler = async (event) => {
 	try {
-		// Determine event type and extract chatId
 		let chatId;
 		
-		// Check if this is a Telegram message event
 		if (event.message && event.message.chat && event.message.chat.id) {
 			chatId = event.message.chat.id.toString();
 		} 
-		// Otherwise, assume it's an HTTP request
 		else {
 			chatId = event.queryStringParameters?.chatId;
 		}
 		
 		if (!chatId) {
-			// Return minimal response if chatId is missing
 			return { statusCode: 400 };
 		}
 
 		const currentTime = new Date();
-
+		const easternTime = new Date(currentTime.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+		
 		const params = {
 			TableName: 'Medicine',
 			Key: {
@@ -38,15 +35,14 @@ exports.handler = async (event) => {
 			},
 			UpdateExpression: 'SET lastMedicatedTime = :time',
 			ExpressionAttributeValues: {
-			  ':time': currentTime.toISOString()
+			  ':time': easternTime.toISOString()
 			}
 		};
 
 		await dynamoDb.update(params).promise();
 
-		await bot.sendMessage(chatId, `Medication recorded at ${currentTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`);
+		await bot.sendMessage(chatId, `Medication recorded at ${easternTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/New_York' })}`);
 
-		// Simple success response for both HTTP and Telegram events
 		return { statusCode: 200 };
 	} catch (error) {
 		console.error('Error recording medication:', error);
