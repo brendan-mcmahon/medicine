@@ -11,16 +11,16 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient({
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
 function getEasternTime() {
-	const easternTime = new Date(date.toLocaleString('en-US', {
+	const easternTime = new Date().toLocaleString('en-US', {
 		timeZone: 'America/New_York',
 		hour12: false
-	}));
+	});
 
 	return easternTime;
 }
 
-function isBeforeNineAM(date) {
-	const easternTime = getEasternTime(date);
+function isBeforeNineAM() {
+	const easternTime = getEasternTime();
 
 	console.log('Checking eastern time:', easternTime);
 	console.log('Eastern time hour:', easternTime.getHours());
@@ -31,7 +31,7 @@ function isBeforeNineAM(date) {
 exports.handler = async () => {
 	try {
 		console.log('Checking medication at:', getEasternTime());
-		if (isBeforeNineAM(new Date())) {
+		if (isBeforeNineAM()) {
 			console.log('Not 9am, returning');
 			return {
 				statusCode: 200,
@@ -46,8 +46,7 @@ exports.handler = async () => {
 		const data = await dynamoDb.scan(params).promise();
 
 		for (const item of data.Items) {
-			const lastMedicatedTime = new Date(item.lastMedicatedTime);
-			if (lastMedicatedTime.toDateString() !== getEasternTime().toDateString()) {
+			if (item.lastMedicatedTime !== getEasternTime()) {
 				await bot.sendMessage(item.chatId, 'Reminder: You have not taken your medication today.');
 				console.log('Sent message to:', item.chatId);
 			}
