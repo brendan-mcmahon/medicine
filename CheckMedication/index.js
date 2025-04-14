@@ -23,9 +23,9 @@ function isBeforeNineAM() {
 	const easternTime = getEasternTime();
 
 	console.log('Checking eastern time:', easternTime);
-	console.log('Eastern time hour:', easternTime.getHours());
+	console.log('Eastern time hour:', new Date(easternTime).getHours());
 
-	return easternTime.getHours() < 9;
+	return new Date(easternTime).getHours() < 9;
 }
 
 exports.handler = async () => {
