@@ -22,17 +22,16 @@ function getEasternTime() {
 function isBeforeNineAM() {
 	const easternTime = getEasternTime();
 
-	console.log('Checking eastern time:', easternTime);
-	console.log('Eastern time hour:', new Date(easternTime).getHours());
-
 	return new Date(easternTime).getHours() < 9;
+}
+
+function getDateWithoutTime(date) {
+	return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
 exports.handler = async () => {
 	try {
-		console.log('Checking medication at:', getEasternTime());
 		if (isBeforeNineAM()) {
-			console.log('Not 9am, returning');
 			return {
 				statusCode: 200,
 				body: JSON.stringify({ message: 'Not 9am, returning' })
@@ -46,9 +45,10 @@ exports.handler = async () => {
 		const data = await dynamoDb.scan(params).promise();
 
 		for (const item of data.Items) {
-			if (item.lastMedicatedTime !== getEasternTime()) {
+			const lastMedicatedTime = getDateWithoutTime(new Date(item.lastMedicatedTime));
+			const now = getDateWithoutTime(new Date(getEasternTime()));
+			if (lastMedicatedTime.toISOString() !== now.toISOString()) {
 				await bot.sendMessage(item.chatId, 'Reminder: You have not taken your medication today.');
-				console.log('Sent message to:', item.chatId);
 			}
 		}
 
