@@ -16,7 +16,7 @@ exports.handler = async (event) => {
 	console.log(body);
 
   try {
-	const chatId = body?.message?.chat?.id;
+	const chatId = String(body?.message?.chat?.id);
 
     if (!chatId) {
       console.error('No chatId found in payload');
