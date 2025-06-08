@@ -11,7 +11,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient({
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
 
 exports.handler = async (event) => {
-  const body = JSON.parse(event);
+  const body = JSON.parse(event.body);
 
   try {
 	const chatId = body?.message?.chat?.id?.toString()
