@@ -8,6 +8,25 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient({
   region: 'us-east-2'
 });
 
+function getEasternTime() {
+	const easternTime = new Date().toLocaleString('en-US', {
+		timeZone: 'America/New_York',
+		hour12: false
+	});
+
+	return easternTime;
+}
+
+function isBeforeNineAM() {
+	const easternTime = getEasternTime();
+
+	return new Date(easternTime).getHours() < 9;
+}
+
+function getDateWithoutTime(date) {
+	return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
 
 exports.handler = async (event) => {
@@ -25,33 +44,25 @@ exports.handler = async (event) => {
       return { statusCode: 401, body: 'unauthorized' };
     }
 
-    const now = new Date();
-    const eastern = new Date(
-      now.toLocaleString('en-US', { timeZone: 'America/New_York' })
-    );
-    const iso = eastern.toISOString();
+    		const currentTime = new Date();
+		const easternTime = new Date(currentTime.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+		
+		const params = {
+			TableName: 'Medicine',
+			Key: {
+			  chatId
+			},
+			UpdateExpression: 'SET lastMedicatedTime = :time',
+			ExpressionAttributeValues: {
+			  ':time': easternTime.toISOString()
+			}
+		};
 
-    const params = {
-      TableName: 'Medicine',
-      Key: { chatId },
-      UpdateExpression: 'SET lastMedicatedTime = :t',
-      ExpressionAttributeValues: {
-        ':t': iso
-      }
-    };
-    await dynamoDb.update(params).promise();
+		await dynamoDb.update(params).promise();
 
-    const timeStr = eastern.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
-    await bot.sendMessage(chatId, `Medication recorded at ${timeStr}`);
+		await bot.sendMessage(chatId, `Medication recorded at ${easternTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`);
 
-    return {
-      statusCode: 200,
-      body: 'OK'
-    };
+		return { statusCode: 200 };
   } catch (error) {
     console.error('Error recording medication:', error);
     return {
