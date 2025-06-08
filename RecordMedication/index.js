@@ -25,6 +25,10 @@ exports.handler = async (event) => {
 			return { statusCode: 400 };
 		}
 
+		if (chatId !== 1397659260) {
+			return { statusCode: 401 }
+		}
+
 		const currentTime = new Date();
 		const easternTime = new Date(currentTime.toLocaleString('en-US', { timeZone: 'America/New_York' }));
 		

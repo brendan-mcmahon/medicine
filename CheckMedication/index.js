@@ -44,12 +44,11 @@ exports.handler = async () => {
 
 		const data = await dynamoDb.scan(params).promise();
 
-		for (const item of data.Items) {
-			const lastMedicatedTime = getDateWithoutTime(new Date(item.lastMedicatedTime));
-			const now = getDateWithoutTime(new Date(getEasternTime()));
-			if (lastMedicatedTime.toISOString() !== now.toISOString()) {
-				await bot.sendMessage(item.chatId, 'Reminder: You have not taken your medication today.');
-			}
+		const item = data.Items.filter(i => i.chatId === 1397659260)[0];
+		const lastMedicatedTime = getDateWithoutTime(new Date(item.lastMedicatedTime));
+		const now = getDateWithoutTime(new Date(getEasternTime()));
+		if (lastMedicatedTime.toISOString() !== now.toISOString()) {
+			await bot.sendMessage(item.chatId, 'Reminder: You have not taken your medication today.');
 		}
 
 		return {
