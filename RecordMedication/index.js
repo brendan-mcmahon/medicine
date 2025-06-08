@@ -11,6 +11,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient({
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
 exports.handler = async (event) => {
+	console.log(event)
 	try {
 		let chatId;
 		
@@ -25,7 +26,7 @@ exports.handler = async (event) => {
 			return { statusCode: 400 };
 		}
 
-		if (chatId !== 1397659260) {
+		if (chatId !== "1397659260") {
 			return { statusCode: 401 }
 		}
 
