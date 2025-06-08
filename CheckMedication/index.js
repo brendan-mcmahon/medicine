@@ -44,8 +44,8 @@ exports.handler = async () => {
 
 		const data = await dynamoDb.scan(params).promise();
 		console.log(data);
-		
-		const item = data.Items.filter(i => i.chatId === 1397659260)[0];
+
+		const item = data.Items.filter(i => i.chatId === '1397659260')[0];
 		const lastMedicatedTime = getDateWithoutTime(new Date(item.lastMedicatedTime));
 		const now = getDateWithoutTime(new Date(getEasternTime()));
 		if (lastMedicatedTime.toISOString() !== now.toISOString()) {
