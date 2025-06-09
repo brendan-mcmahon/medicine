@@ -22,7 +22,7 @@ exports.handler = async (event) => {
       console.error('No chatId found in payload');
       return { statusCode: 400, body: 'chatId required' };
     }
-    if (chatId !== 1397659260) {
+    if (chatId !== '1397659260') {
       console.error('Unauthorized chatId:', chatId);
       return { statusCode: 401, body: 'unauthorized' };
     }
